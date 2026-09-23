@@ -73,7 +73,9 @@ TypeScript ports lagging. Note that Zep retired its self-hosted community editio
 
 ## Observability — a wash
 
-Langfuse has a first-class Python SDK either way. Phoenix is Python-native
+Langfuse has a first-class Python SDK either way, and its
+[non-profit programme](nonprofit-programs.md) makes the hosted version
+effectively free for us. Phoenix is Python-native
 (ELv2). [Logfire](https://github.com/pydantic/logfire)'s SDKs are MIT and
 OTel-native, but the backend is closed and self-hosting requires an enterprise
 licence — the OTel-native part means it can export to any backend, which softens

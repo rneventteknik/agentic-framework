@@ -53,4 +53,5 @@ based on, is written up in **[research/](research/README.md)** — start there.
 | [Language decision](research/language-decision.md) | One language or two — the actual trade-off |
 | [MCP topology](research/mcp-topology.md) | How the tool registry is split into MCP servers |
 | [Chat surface](research/chat-surface.md) | Build a chat UI, or adopt Open WebUI wholesale |
+| [Non-profit programs](research/nonprofit-programs.md) | What RN's non-profit status is worth across the stack |
 | [Open questions](research/open-questions.md) | Decisions still to make |

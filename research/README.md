@@ -42,6 +42,13 @@ directly and solves identity propagation for free; its licence, its lack of
 approval gating, and the line between "a surface" and "the framework" are the
 things to know before committing.
 
+### [Non-profit programs](nonprofit-programs.md)
+What RN's non-profit status is worth across the stack: Langfuse Cloud effectively
+free, Google Workspace free, GitHub Team free, Slack Pro free, Anthropic seat
+discounts — and Heroku confirmed to offer nothing. Also the caveat that most AI
+non-profit programmes discount seats rather than API usage, which is where our
+cost actually is.
+
 ### [Open questions](open-questions.md)
 Decisions still outstanding, each with the options and what hangs on them —
 deployment shape, identity model, chat surface, mail trigger latency, and how

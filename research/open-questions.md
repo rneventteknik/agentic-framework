@@ -64,7 +64,19 @@ Langfuse self-hosted wants ClickHouse + Postgres + Redis, which is heavy next to
 one Heroku Postgres. Langfuse Cloud, Laminar, or just our own run store to begin
 with?
 
-## 9. Licence
+Largely answered by [non-profit programs](nonprofit-programs.md): Langfuse Cloud
+Pro is effectively free for us, so self-hosting has to justify itself on data
+residency grounds rather than cost.
+
+## 9. Non-profit programs to claim
+
+Several are confirmed available and unclaimed — see
+[non-profit programs](nonprofit-programs.md). Validation through TechSoup Sweden
+and Goodstack gates most of them and only needs doing once. Open sub-question:
+whether Anthropic's non-profit pricing extends to API usage, which is our actual
+spend.
+
+## 10. Licence
 
 The repo is public and has no licence file yet. backstage2 is MIT — matching it is
 the obvious default, but worth an explicit decision.

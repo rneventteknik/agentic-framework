@@ -69,6 +69,10 @@ Postgres + Redis**, a serious footprint next to a single Heroku Postgres. Option
 Langfuse Cloud with self-host as the exit, or Laminar (Apache-2.0, lighter,
 OTel-native).
 
+**As a non-profit we get Langfuse Cloud Pro effectively free** — $199/month in
+credits covering the base fee and 100k events. That largely removes the reason to
+self-host it at all; see [non-profit programs](nonprofit-programs.md).
+
 Either way, **still build the run store.** Langfuse is for debugging traces, not
 for the domain-level audit log of "agent sent mail X, approved by Y".
 
