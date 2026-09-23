@@ -20,7 +20,7 @@ thin.**
 | Observability / run store | [Langfuse](https://github.com/langfuse/langfuse) (MIT core, ~35k★), Arize Phoenix (ELv2), Laminar (Apache-2.0), OpenLLMetry | **Adopt** — but read the self-host cost |
 | Evals / harness | [promptfoo](https://promptfoo.dev) (MIT), Langfuse datasets, DeepEval, Opik | **Adopt** |
 | Memory | pgvector, Letta, Mem0, Graphiti | **Adopt the boring one** (pgvector) |
-| Chat UI | [assistant-ui](https://github.com/assistant-ui/assistant-ui), [CopilotKit](https://github.com/copilotkit/copilotkit) + [AG-UI](https://docs.ag-ui.com/introduction), AI Elements, LibreChat | **Adopt** |
+| Chat UI | [Open WebUI](chat-surface.md) (adopt whole), or build with [assistant-ui](https://github.com/assistant-ui/assistant-ui) / [CopilotKit](https://github.com/copilotkit/copilotkit) + [AG-UI](https://docs.ag-ui.com/introduction) | **Adopt** — see [chat surface](chat-surface.md) |
 | Policy / approvals | *gap* — only framework primitives | **Build** |
 | Batch LLM pipelines | *gap* — Ray Data LLM is Python and GPU-shaped | **Build (small)** |
 

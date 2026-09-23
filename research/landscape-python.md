@@ -86,13 +86,17 @@ Chainlit is the obvious Python pick, but the founding team
 and it is community-maintained now, with two high-severity CVEs reported late in
 2025. Streamlit's rerun model fights the chat pattern; Gradio is demo-grade.
 
-The practical answer is to keep the UI in TypeScript (assistant-ui or CopilotKit)
+One practical answer is to keep the UI in TypeScript (assistant-ui or CopilotKit)
 and talk to a Python backend over [AG-UI](https://docs.ag-ui.com/introduction) —
-which works fine; the protocol is language-agnostic with 40+ integrations.
+which works fine; the protocol is language-agnostic with 40+ integrations. But
+that means Python does not buy one language, it buys Python plus a TypeScript
+frontend.
 
-**But that means Python does not buy one language. It buys Python plus a
-TypeScript frontend.** Which is the whole of the
-[language decision](language-decision.md).
+The better answer is probably not to build a chat UI at all.
+[Open WebUI](chat-surface.md) is a finished self-hosted chat product with native
+Streamable-HTTP MCP support, which turns this layer from a build into a
+configuration — and largely dissolves the objection above. See
+[chat surface](chat-surface.md).
 
 ---
 

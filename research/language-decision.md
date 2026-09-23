@@ -19,8 +19,12 @@ Better runtime maturity, far better batch pipelines, better memory and MCP
 tooling, better durable-execution options on a single Postgres.
 
 Cost: backstage2 becomes a pure HTTP/SQL boundary with hand-maintained types on
-both sides. And the chat UI is either weak (Chainlit's maintenance situation) or
-TypeScript anyway — so the "one language" benefit is largely illusory.
+both sides.
+
+The chat UI used to be a second cost here — weak in Python, or TypeScript anyway,
+making the "one language" benefit illusory. [Adopting Open WebUI](chat-surface.md)
+rather than building removes that objection, which strengthens the all-Python
+option more than anything else in this file.
 
 ### Split — Python core, TypeScript UI
 Best tool per layer, connected over AG-UI.

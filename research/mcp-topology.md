@@ -73,6 +73,11 @@ identity immediately — which is what the MCP 2026-07-28 revision's OAuth align
 and RFC 8707 audience validation exist for. **Retrofitting identity is worse than
 retrofitting transport.**
 
+Worth knowing that [Open WebUI](chat-surface.md), if adopted as the chat surface,
+supplies this directly: OAuth 2.1 or bearer auth plus custom headers templated
+with `{{USER_ID}}` / `{{USER_EMAIL}}` / `{{USER_ROLE}}`, so the human's identity
+reaches the policy layer without an identity broker of our own.
+
 ## Transport
 
 HTTP (Streamable HTTP) first, with stdio as a local-dev convenience wrapper. stdio

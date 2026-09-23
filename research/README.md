@@ -35,6 +35,13 @@ tool-count dilution and differing auth identities. Includes the read/write split
 why policy must run server-side, and why identity has to be in the transport from
 day one.
 
+### [Chat surface](chat-surface.md)
+Whether to build a chat UI or adopt [Open WebUI](https://github.com/open-webui/open-webui)
+wholesale. Native Streamable-HTTP MCP support makes it fit the tool registry
+directly and solves identity propagation for free; its licence, its lack of
+approval gating, and the line between "a surface" and "the framework" are the
+things to know before committing.
+
 ### [Open questions](open-questions.md)
 Decisions still outstanding, each with the options and what hangs on them —
 deployment shape, identity model, chat surface, mail trigger latency, and how

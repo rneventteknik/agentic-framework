@@ -41,6 +41,11 @@ Slack is where the ops work already happens and needs no UI build. The web chat 
 the better *building and debugging* surface, with the run inspector attached.
 Probably both eventually; the question is which one gets built first.
 
+Narrowed by [chat surface](chat-surface.md): adopting Open WebUI makes the web
+option nearly free once the MCP servers exist, so this is less either/or than it
+looked. The remaining sub-question is whether Open WebUI also replaces a
+purpose-built run inspector — probably not.
+
 ## 6. Mail trigger latency
 
 Push (Gmail watch via Pub/Sub) or polling? Push is considerably more setup. If a

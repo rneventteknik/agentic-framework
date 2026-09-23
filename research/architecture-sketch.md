@@ -110,7 +110,8 @@ The part usually skipped, after which iteration stops being possible:
 
 ### 9. Surfaces
 - **Chat UI** — streaming, tool calls visible, run inspector, inline approvals.
-  The building and debugging surface.
+  The building and debugging surface. May be adopted rather than built; see
+  [chat surface](chat-surface.md).
 - **Slack** — the ops surface; agents live in threads where people already are.
 - **MCP servers** — the same registry exposed to Claude Code and Claude Desktop.
   The cheapest leverage on the list: an agent for free the day the tools exist.
