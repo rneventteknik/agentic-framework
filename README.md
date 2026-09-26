@@ -40,11 +40,6 @@ These fall out of the research and are the load-bearing decisions so far:
 5. **Prompts and agent definitions live in git.** The database holds runs and
    outputs only.
 
-## Continuing this work
-
-[HANDOVER.md](HANDOVER.md) summarises what has been decided, what is still open,
-and the research agenda that comes next.
-
 ## Research
 
 The stack is not chosen yet. The reasoning, and the open-source landscape it is
