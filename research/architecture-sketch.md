@@ -102,7 +102,11 @@ raw text into context. Plus per-agent scratch state across runs.
 The part usually skipped, after which iteration stops being possible:
 
 - **Cassettes** — every tool call and result recorded in the run store, so a past
-  run can be replayed against a new prompt with no side effects.
+  run can be replayed against a new prompt with no side effects. Cheapest way in:
+  keep the model behind a *provider* interface, then replay is another
+  implementation of it rather than a mode inside the loop. The same seam carries
+  tracing, spend caps and dry-run — see
+  [Gleam landscape](landscape-gleam.md#evals-and-cassettes--still-nothing-for-replay-but-half-of-it-exists).
 - **Suites** — golden tasks with deterministic assertions where possible, an LLM
   judge where not.
 - **Regression tracking** — score per prompt and model version over time, so a

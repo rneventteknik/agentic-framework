@@ -106,6 +106,36 @@ is maintaining it as the spec moves.
 Alternatives are thinner: `gllm` (5 commits, one day), `gopenai` (no repo link,
 last touched 2024), `starlet`, `starflow`.
 
+**`glean` 0.1.0 (MIT) is the one to actually read**, because it is not a client but
+a framework, and its design is closer to the architecture sketch than anything else
+in this survey. 6,741 lines covering an agent loop (`run.gleam`), a `Toolset`, a
+schema builder, middleware, a model catalogue across nine providers, streaming, and
+a simulation test harness. Its `providers/openai_compatible.gleam` is the generic
+client shape argued for above — Deepseek, Qwen, Moonshot, MiniMax and Mistral all
+route through it.
+
+Three of its decisions are worth stealing regardless of what we build on:
+
+- **`Provider` is a record of function fields** — *"Gleam's idiomatic replacement
+  for interfaces. Any library can create a Provider value without modifying this
+  module."* Instrumentation, policy, spend caps, caching and cassette replay then
+  become provider decorators rather than changes to the loop. `middleware.apply`
+  demonstrates it: wrap a `Provider`, get a `Provider`.
+- **`Tool(deps)` is generic over a dependency type**, threaded from agent to tool
+  execution — lifted from Pydantic AI's `RunContext`. That is a ready-made channel
+  for [per-user identity](open-questions.md#4-identity-model) and the policy
+  context, which the sketch otherwise has nowhere to put.
+- **`run.continue`** resumes a previous run with new input — the shape a
+  [blocking approval](architecture-sketch.md#4-policy--human-in-the-loop) needs.
+
+Its maturity is the worst of any package here, and not for the usual reason: all
+6,741 lines arrived in **one commit**, `"Implement full glean AI agent SDK"`, on
+2026-03-09, with nothing since. 157 all-time downloads, 13/week. The repo has a real
+test suite (`schema_test`, `simulation_test`, `integration`) but **the published
+tarball ships no tests at all**, and no documentation was published to hexdocs.
+
+Read it, take the ideas, do not depend on it.
+
 ### Tool schemas and structured output — the question the handover asked
 This is where Gleam's type system either pays off or doesn't, and the answer is
 **it pays off, via one of three distinct designs**:
@@ -118,6 +148,14 @@ are written separately and nothing checks they agree. This is the same thing
 `#("package_name", "string", "Name of the package", True)` tuples. It works, and it
 is exactly the drift the [tool registry principle](../README.md#design-principles)
 exists to prevent.
+
+`glean` picks this design deliberately rather than by accident, and is the version
+worth arguing with: an opaque `Schema` builder (*"no macros, no reflection"*) with
+`to_json_strict` emitting `additionalProperties: false` for OpenAI strict structured
+outputs, while `Tool.execute` takes the raw arguments string because *"each tool
+decodes it internally using its own decoder. This is explicit and type-safe."* It is
+explicit; it is not checked. Two definitions still have to agree, and the compiler
+cannot tell when they stop agreeing — which is the whole problem at fifty tools.
 
 **2. Combined schema+decoder (`glon`).** `JsonSchema(node: SchemaNode, decoder:
 Decoder(t))` — one value carrying both, "in sync by construction", composed with
@@ -203,11 +241,19 @@ Since [Langfuse Cloud is effectively free](nonprofit-programs.md), the question 
 whether a Gleam runtime can feed it. It can, over OTLP, in four pieces — none of
 which is the OpenAI client.
 
-**The client contributes nothing.** `glopenai` has *zero* telemetry surface: no
-hooks, no middleware, no interceptor, not one function matching trace/span/
-telemetry. Every span is opened and populated by our own wrapper around the call.
-The same is true of `gllm` and the abandoned Anthropic SDKs. No Gleam LLM client
-instruments itself.
+**No Gleam LLM client instruments itself.** `glopenai` has *zero* telemetry surface:
+no hooks, no middleware, no interceptor, not one function matching trace/span/
+telemetry. The same holds for `gllm` and the abandoned Anthropic SDKs. Every span is
+opened and populated by our own code.
+
+What decides how painful that is, is whether the client gives a **seam** to hang it
+on. `glopenai` does not — it is a flat set of request functions, so instrumentation
+means wrapping each call site. [`glean`](#llm-client--prefer-an-openai-compatible-client-not-an-anthropic-sdk)
+shows the alternative: because its `Provider` is a record of function fields, a
+traced provider is `middleware.apply` or a hand-written decorator, written once and
+applied to every model call including tool loops and streaming. Whatever we build
+on, **the runtime should own a provider-shaped interface for exactly this reason** —
+it is also where spend caps, dry-run and cassette replay attach.
 
 **Two Gleam OTel bindings exist**, both Apache-2.0 wrappers over the Erlang
 `opentelemetry` libraries:
@@ -269,9 +315,22 @@ Erlang `jwerl` / `p1_oauth2` are reachable by FFI. Relevant to
 [open question #4](open-questions.md#4-identity-model) and to
 `../scoutid-keycloak-provider` as prior art.
 
-### Evals and cassettes — nothing, as everywhere
-No cassette/replay library in any of the three languages surveyed. Confirms this
-gets written regardless of language, so it does not discriminate.
+### Evals and cassettes — still nothing for replay, but half of it exists
+No record-and-replay cassette library in any of the three languages surveyed, so
+that half gets written regardless and does not discriminate.
+
+The *other* half — scripted suites with deterministic assertions — does exist here.
+`glean/testing/simulation` is a pure, deterministic engine for multi-step agent
+workflows: `then_respond_text`, `then_call_tools`, `then_provider_error`,
+per-step and `assert_finally` assertions, with `run` a pure function over a script.
+Its `testing/provider` returns scripted responses in sequence behind the ordinary
+`Provider` interface.
+
+That last detail is the transferable one. A cassette replayer is *the same shape* —
+a `Provider` that answers from the run store instead of the network — so recording
+real runs and replaying them against a changed prompt needs no special support in
+the loop, only the provider seam. That is a design answer we get for free from
+reading `glean`, in any language.
 
 ## Prior art in the user's own repos
 
@@ -291,8 +350,9 @@ Assuming `glopenai` + `aide` + `castor` + `pog` + `squirrel`:
 
 1. **The tool registry itself** — the metadata the sketch calls for (`read|write`,
    cost hint, idempotency, required scope, approval mode) sits above any of these.
-2. **The agent loop** — `claude_gleam` has one worth reading, but it is
-   Anthropic-shaped and abandoned; on an OpenAI-compatible client this is ours.
+2. **The agent loop** — ours, but not from a blank page: `glean/run.gleam` is a
+   provider-agnostic loop with steps, streaming and resume, and `claude_gleam` has
+   an event-emitting one. Both are abandoned; both are readable.
 3. **Policy layer** — nothing anywhere.
 4. **Run store, cassettes, evals** — ours in every language.
 5. **Durable queue** — `mule`, FFI to Oban, or hand-rolled on Postgres `SKIP LOCKED`.
@@ -311,7 +371,10 @@ The handover asked for this, so, plainly:
 - The **LLM layer is a graveyard**. Of nine agentic packages examined, seven were
   created and abandoned inside a week. `pig` (67 commits, active this month, but no
   tests and no CI) and `aide` (11 releases, tests, CI) are the only two showing
-  sustained work.
+  sustained work. Worth separating two failure modes, though: most are thin and
+  abandoned, while `glean` and `glopenai` are *substantial* and abandoned. The
+  second kind is still valuable — as a design to read, or a fork to own — and the
+  ideas in `glean` outlive the question of whether Gleam is chosen at all.
 - **`gleam_stdlib` hit 1.0 five months ago.** The floor is new.
 - **Vendoring is the realistic plan, not the fallback.** `glon` is 840 lines;
   `glopenai`'s used surface is a fraction of its 20 modules. Both are small enough
