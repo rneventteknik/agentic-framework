@@ -50,6 +50,7 @@ based on, is written up in **[research/](research/README.md)** — start there.
 | [Architecture sketch](research/architecture-sketch.md) | The components an agentic framework needs, and why |
 | [TypeScript landscape](research/landscape-typescript.md) | What open source covers, per layer, in TS |
 | [Python landscape](research/landscape-python.md) | The same, in Python |
+| [Gleam landscape](research/landscape-gleam.md) | The same, in Gleam — and what would have to be written |
 | [Language decision](research/language-decision.md) | One language or two — the actual trade-off |
 | [MCP topology](research/mcp-topology.md) | How the tool registry is split into MCP servers |
 | [Chat surface](research/chat-surface.md) | Build a chat UI, or adopt Open WebUI wholesale |

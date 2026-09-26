@@ -14,6 +14,9 @@ rest.
 - *Supporting* (a few hundred rows on a trigger) → all TypeScript, share types with
   backstage2.
 
+[Gleam](landscape-gleam.md) is now a third answer, decided by a different question —
+how much of the foundation we are willing to own and maintain ourselves.
+
 ## 2. Generic framework, or RN-shaped?
 
 A reusable framework with RN as its first consumer costs perhaps 30% more upfront
@@ -54,9 +57,16 @@ few minutes of latency is acceptable, polling removes a whole moving part.
 ## 7. Runtime choice
 
 Deferred until #1 is settled, but the shortlist is written up in the
-[TypeScript](landscape-typescript.md#runtime--the-real-fork) and
-[Python](landscape-python.md#agent-runtime--deeper-bench-same-conclusion)
-landscape notes.
+[TypeScript](landscape-typescript.md#runtime--the-real-fork),
+[Python](landscape-python.md#agent-runtime--deeper-bench-same-conclusion) and
+[Gleam](landscape-gleam.md#layer-by-layer) landscape notes.
+
+New sub-question from the Gleam survey, and it applies to every language: **talk to
+models through an OpenAI-compatible client plus a gateway, rather than a
+provider SDK?** It decouples the runtime from the provider, puts fallback, routing
+and cost caps in one place, and in Gleam's case is the difference between a healthy
+client and three abandoned ones. The gateways themselves (LiteLLM, OpenRouter,
+Portkey) are still unresearched.
 
 ## 8. Observability: self-host or hosted?
 
@@ -67,6 +77,13 @@ with?
 Largely answered by [non-profit programs](nonprofit-programs.md): Langfuse Cloud
 Pro is effectively free for us, so self-hosting has to justify itself on data
 residency grounds rather than cost.
+
+Either way Langfuse ingests **OTLP over HTTP** (`/api/public/otel`; no gRPC), so
+the runtime emits standard OTel rather than anything Langfuse-specific — which
+keeps this swappable and is reachable from every candidate language, Gleam
+[included](landscape-gleam.md#observability--otel-to-langfuse-works-and-nothing-hands-it-to-you).
+Sub-question: emit OTel from day one, or post to
+Langfuse from our own run store first and add OTel later?
 
 ## 9. Non-profit programs to claim
 

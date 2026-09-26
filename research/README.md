@@ -24,6 +24,16 @@ The same survey in Python. Richer in agent runtimes, durable execution, batch
 pipelines, memory and MCP tooling; notably weaker in exactly one place — the chat
 UI — which is what drags TypeScript back in regardless.
 
+### [Gleam landscape](landscape-gleam.md)
+The same survey in Gleam, prompted by two Gleam codebases already running in the
+organisation. The platform layer (stdlib, OTP, `wisp`, `pog`, `squirrel`, `lustre`)
+is production-ready; the LLM layer is mostly one-author packages abandoned within a
+week of publishing. Covers the three competing designs for typed tool schemas, why
+an OpenAI-compatible client beats an Anthropic SDK here, the durable-queue gap, what
+borrowing Oban over FFI costs the type story, and how OTel reaches Langfuse when no
+client instruments itself. Also a warning that searching Hex gives a materially
+wrong picture of what exists in Gleam.
+
 ### [Language decision](language-decision.md)
 The question is not Python vs. TypeScript on merit, it is one language or two.
 The three options, what the polyglot tax actually costs at our size, and the

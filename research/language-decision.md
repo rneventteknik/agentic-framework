@@ -6,7 +6,7 @@ The question is not Python vs. TypeScript on merit. Both
 [landscapes](landscape-typescript.md) are strong enough. The question is **one
 language or two.**
 
-## The three options
+## The options
 
 ### All TypeScript
 Shared types with [backstage2](https://github.com/rneventteknik/backstage2), one
@@ -25,6 +25,21 @@ The chat UI used to be a second cost here — weak in Python, or TypeScript anyw
 making the "one language" benefit illusory. [Adopting Open WebUI](chat-surface.md)
 rather than building removes that objection, which strengthens the all-Python
 option more than anything else in this file.
+
+### All Gleam
+Added after the [Gleam landscape](landscape-gleam.md) survey, and a more serious
+option than it first looked: two Gleam codebases already run in the organisation
+(`../mcp_packages`, `../orkestra`), so the "can we ship it" risk is largely retired.
+One language across runtime, MCP servers, API and — via `lustre` server components —
+the web surface, on a runtime built for supervising crash-prone concurrent work.
+
+Cost: the largest build-it-ourselves bill of any option. Every integration SDK is
+ours to write, the durable queue is either a three-day-old package or Oban over
+untyped FFI, and the LLM client is a well-formed but unmaintained binding we would
+expect to vendor.
+
+This also breaks the "share types with backstage2" argument that carries the
+TypeScript option, without buying Python's pipeline strength.
 
 ### Split — Python core, TypeScript UI
 Best tool per layer, connected over AG-UI.
@@ -52,6 +67,13 @@ pipelines — is the one needed *last* in the
 
 This is the open question with the widest blast radius; see
 [open questions](open-questions.md).
+
+Gleam sits outside that question rather than inside it — it loses on pipelines
+either way. It is decided by a second one: **how much of the foundation are we
+willing to own?** Gleam wins the runtime and costs integration SDKs, a queue and a
+maintained LLM client. Answer "as little as possible" and it is out; answer "we
+intend to vendor and maintain a spine anyway" and it becomes the strongest option
+on the list. See the [Gleam landscape](landscape-gleam.md#the-honest-counterweight).
 
 ---
 

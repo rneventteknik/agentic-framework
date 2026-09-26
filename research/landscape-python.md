@@ -102,4 +102,4 @@ configuration — and largely dissolves the objection above. See
 
 ---
 
-Next: [Language decision](language-decision.md)
+Next: [Gleam landscape](landscape-gleam.md) · [Language decision](language-decision.md)
