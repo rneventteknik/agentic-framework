@@ -5,7 +5,6 @@ from slack_bolt import BoltContext, Say, SayStream, SetStatus
 from slack_sdk import WebClient
 
 from agent import AgentDeps, run_agent
-from listeners.views.feedback_builder import build_feedback_blocks
 from thread_context import conversation_store
 
 
@@ -61,11 +60,9 @@ def handle_app_mentioned(
         )
         result = run_agent(cleaned_text, deps, message_history=history)
 
-        # Stream response in thread with feedback buttons
         streamer = say_stream()
         streamer.append(markdown_text=result.output)
-        feedback_blocks = build_feedback_blocks()
-        streamer.stop(blocks=feedback_blocks)
+        streamer.stop()
 
         # Store conversation history
         conversation_store.set_history(channel_id, thread_ts, result.all_messages())

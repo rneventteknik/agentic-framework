@@ -32,7 +32,7 @@ Found while testing `slack run` against backstage2 stage.
   - the import and `tools=[add_emoji_reaction]` in `agent/agent.py`
   - the `## EMOJI REACTIONS` section of the system prompt
 
-- [ ] **Remove the feedback buttons.** Remove:
+- [x] **Remove the feedback buttons.** Remove:
   - `listeners/views/feedback_builder.py` and its test in
     `tests/test_view_builders.py`
   - `listeners/actions/feedback_buttons.py` and its registration in

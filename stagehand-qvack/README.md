@@ -325,14 +325,9 @@ Every incoming request is routed to a "listener". This directory groups each lis
 - `app_mentioned.py` — Responds to @mentions in channels.
 - `message.py` — Responds to direct messages from users.
 
-**`/listeners/actions`** — Handles interactive components:
-
-- `feedback_buttons.py` — Handles thumbs up/down feedback on agent responses.
-
 **`/listeners/views`** — Builds Block Kit views:
 
 - `app_home_builder.py` — Constructs the App Home Block Kit view.
-- `feedback_builder.py` — Creates the feedback button block attached to responses.
 
 ### `/agent`
 
