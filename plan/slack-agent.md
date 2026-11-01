@@ -36,7 +36,7 @@ Slack comes first.
 
 ```
                       ┌──────────── Proxmox VM ────────────┐
-  Slack  ◀── WSS ─────┤ slack-agent (Pydantic AI)          │
+  Slack  ◀── WSS ─────┤ stagehand-qvack (Pydantic AI)      │
   (Socket Mode)       │ doco-cd                            │
                       └──┬─────────┬──────────┬────────┬───┘
                          │         │          │        │
@@ -61,18 +61,18 @@ inbound connection:
 
 ```
 infra/
-  proxmox/        OpenTofu: the VM, its cloud image and cloud-init
+  proxmox/            OpenTofu: the VM, its cloud image and cloud-init
 deploy/
-  compose.yml       the stack: slack-agent, pinned to its GHCR image
-  compose.local.yml override for a laptop: builds slack-agent from source and
-                    reads slack-agent/.env
-  secrets.enc.env   SOPS-encrypted environment for the stack
-  .sops.yaml        age recipients
-.doco-cd.yml        what doco-cd deploys from this repo
-slack-agent/        Slack CLI project: manifest, Bolt + Pydantic AI app, Dockerfile
-  .env.example      the variables the agent needs; .env itself is gitignored
+  compose.yml         the stack: stagehand-qvack, pinned to its GHCR image
+  compose.local.yml   override for a laptop: builds stagehand-qvack from source
+                      and reads stagehand-qvack/.env
+  secrets.enc.env     SOPS-encrypted environment for the stack
+  .sops.yaml          age recipients
+.doco-cd.yml          what doco-cd deploys from this repo
+stagehand-qvack/      Slack CLI project: manifest, Bolt + Pydantic AI app, Dockerfile
+  .env.sample         the variables the agent needs; .env itself is gitignored
 .github/workflows/
-  slack-agent.yml test, build, push to ghcr.io/rneventteknik/slack-agent
+  stagehand-qvack.yml test, build, push to ghcr.io/rneventteknik/stagehand-qvack
 renovate.json
 ```
 
@@ -112,9 +112,9 @@ The VM **pulls** its deployments. Nothing pushes to it.
 - **Every image is pinned by digest.** Renovate opens PRs that bump the digests.
   A merged bump is deployed by the poll like any other change.
 
-**GitHub Actions only builds.** The `slack-agent` workflow runs on GitHub-hosted
-runners when `slack-agent/` changes. It tests the agent, builds the image, and
-pushes it to GHCR as `ghcr.io/rneventteknik/slack-agent`, tagged with the commit
+**GitHub Actions only builds.** The `stagehand-qvack` workflow runs on GitHub-hosted
+runners when `stagehand-qvack/` changes. It tests the agent, builds the image, and
+pushes it to GHCR as `ghcr.io/rneventteknik/stagehand-qvack`, tagged with the commit
 SHA. A follow-up commit, from Renovate or by hand, moves the digest in
 `compose.yml`.
 
@@ -122,7 +122,7 @@ SHA. A follow-up commit, from Renovate or by hand, moves the digest in
 
 - **Anthropic:** an API key from a dedicated Anthropic Console workspace with a
   monthly spend limit. Until LiteLLM is in place, that limit is the budget.
-- **backstage2:** add a key named `slack-agent` to `MCP_API_KEYS` on Heroku.
+- **backstage2:** add a key named `stagehand-qvack` to `MCP_API_KEYS` on Heroku.
   **Leave out the `pii` scope.** Answers are posted in Slack, where more people can
   read them than have access to backstage2, so full names and customer contact
   details should not come back by default. Add the scope later, and only if the
@@ -132,7 +132,7 @@ SHA. A follow-up commit, from Renovate or by hand, moves the digest in
   Socket Mode.
 
 On the VM, all of them go into `deploy/secrets.enc.env`. On a laptop, they go
-into `slack-agent/.env`, which is gitignored and uses the development app's Slack
+into `stagehand-qvack/.env`, which is gitignored and uses the development app's Slack
 tokens.
 
 ## Slack agent
@@ -145,13 +145,13 @@ answers @mentions in channels.
 
 ### Created and configured with the Slack CLI
 
-All of it lives in `slack-agent/`:
+All of it lives in `stagehand-qvack/`:
 
 - **Create** the project with `slack create`, from the Bolt for Python template in
   Slack's [agent quickstart](https://docs.slack.dev/ai/agent-quickstart). Agent
   features need at least Bolt for Python 1.29.0 and the Python Slack SDK 3.43.0
   ([changelog](https://docs.slack.dev/changelog/2026/06/30/agent-messages-tab)).
-- **The manifest is the source of truth.** `slack-agent/manifest.json` holds the
+- **The manifest is the source of truth.** `stagehand-qvack/manifest.json` holds the
   name, scopes, events, Socket Mode and the agent settings, and is reviewed in PRs
   like any other code. The project's config sets the manifest source to the local
   file, so `slack install` pushes it to Slack's app settings rather than the other
@@ -161,7 +161,7 @@ All of it lives in `slack-agent/`:
   RN's workspace; that is the app the container runs as. Commit the files the
   template does not ignore under `.slack/` (app IDs are not secret); never commit
   tokens.
-- **The Dockerfile** lives in `slack-agent/` and builds the same app for the
+- **The Dockerfile** lives in `stagehand-qvack/` and builds the same app for the
   container.
 
 ### Manifest settings
@@ -271,9 +271,9 @@ Each step ends with a check that shows it works before the next one starts.
 
 1. **The agent in Docker Compose on a laptop.** Needs an Anthropic workspace and
    API key, a backstage2 MCP key, and the Slack CLI logged in to RN's workspace.
-   `slack create` in `slack-agent/`, then the manifest, the Pydantic AI agent, the
+   `slack create` in `stagehand-qvack/`, then the manifest, the Pydantic AI agent, the
    Dockerfile with the locked dependencies, `deploy/compose.yml` and
-   `deploy/compose.local.yml`. Fill `slack-agent/.env` from `.env.example` with
+   `deploy/compose.local.yml`. Fill `stagehand-qvack/.env` from `.env.sample` with
    the development app's tokens, and run:
 
    ```sh
@@ -291,7 +291,7 @@ Each step ends with a check that shows it works before the next one starts.
    test channel. The trace shows both tool calls. After
    `docker compose down` and `up` again, it still works, since the agent keeps no
    state of its own.
-2. **The image in GHCR.** The `slack-agent` workflow, and the image digest in
+2. **The image in GHCR.** The `stagehand-qvack` workflow, and the image digest in
    `compose.yml`.
    *Check:* the workflow publishes the image on a merge to `main`. On the laptop,
    `docker compose -f deploy/compose.yml up` with the same `.env`, without the
@@ -360,7 +360,7 @@ under the registry") from the [README](../README.md).
   `backstage2` MCP server only (`object_permission`, see
   [MCP access control](https://docs.litellm.ai/docs/mcp_control)).
 - **backstage2:** a new `MCP_API_KEYS` entry named `litellm`, without `pii`. The
-  `slack-agent` key is removed once the agent has switched over.
+  `stagehand-qvack` key is removed once the agent has switched over.
 - **Admin UI:** served on LiteLLM's port, reachable from the admin subnet only.
   The agent reaches LiteLLM over the Compose network.
 
