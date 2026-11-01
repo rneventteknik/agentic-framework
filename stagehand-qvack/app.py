@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
-from slack_sdk import WebClient
 
 from agent import get_backstage2_toolset, get_model
 from listeners import register_listeners
@@ -14,13 +13,7 @@ configure_logging()
 get_model()  # Fail fast if no AI provider key is configured
 get_backstage2_toolset()
 
-app = App(
-    token=os.environ.get("SLACK_BOT_TOKEN"),
-    client=WebClient(
-        base_url=os.environ.get("SLACK_API_URL", "https://slack.com/api"),
-        token=os.environ.get("SLACK_BOT_TOKEN"),
-    ),
-)
+app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
 
 register_listeners(app)
 
