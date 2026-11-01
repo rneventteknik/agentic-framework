@@ -63,9 +63,9 @@ inbound connection:
 infra/
   proxmox/            OpenTofu: the VM, its cloud image and cloud-init
 deploy/
-  compose.yml         the stack: stagehand-qvack, pinned to its GHCR image
+  compose.yml         the stack: stagehand-qvack from its GHCR image, with its
+                      secrets passed in from the environment
   compose.local.yml   override for a laptop: builds stagehand-qvack from source
-                      and reads stagehand-qvack/.env
   secrets.enc.env     SOPS-encrypted environment for the stack
   .sops.yaml          age recipients
 .doco-cd.yml          what doco-cd deploys from this repo
@@ -131,9 +131,10 @@ SHA. A follow-up commit, from Renovate or by hand, moves the digest in
 - **Slack:** the bot token, and an app-level token with `connections:write` for
   Socket Mode.
 
-On the VM, all of them go into `deploy/secrets.enc.env`. On a laptop, they go
-into `stagehand-qvack/.env`, which is gitignored and uses the development app's Slack
-tokens.
+`deploy/compose.yml` lists them by name only, so their values come from
+whatever runs Compose. On the VM, they go into `deploy/secrets.enc.env`. On a
+laptop, they go into `stagehand-qvack/.env`, which is gitignored, uses the
+development app's Slack tokens, and is passed with `--env-file`.
 
 ## Slack agent
 
@@ -278,7 +279,8 @@ Each step ends with a check that shows it works before the next one starts.
    the development app's tokens, and run:
 
    ```sh
-   docker compose -f deploy/compose.yml -f deploy/compose.local.yml up --build
+   docker compose -f deploy/compose.yml -f deploy/compose.local.yml \
+     --env-file stagehand-qvack/.env up --build
    ```
 
    `slack run` is still useful for quick iteration, but the check runs against
@@ -295,8 +297,8 @@ Each step ends with a check that shows it works before the next one starts.
 2. **The image in GHCR.** The `stagehand-qvack` workflow, and the image digest in
    `compose.yml`.
    *Check:* the workflow publishes the image on a merge to `main`. On the laptop,
-   `docker compose -f deploy/compose.yml up` with the same `.env`, without the
-   local override, pulls that image and passes the step 1 check.
+   `docker compose -f deploy/compose.yml --env-file stagehand-qvack/.env up`,
+   without the local override, pulls that image and passes the step 1 check.
 3. **The VM.** Needs a Proxmox API token, an R2 bucket for state and an age key
    pair. `infra/proxmox` creates the VM with cloud-init, which starts doco-cd.
    *Check:* `tofu init` succeeds against the R2 backend. SSH in from the admin

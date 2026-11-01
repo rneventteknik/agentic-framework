@@ -53,32 +53,32 @@ In Portainer (portainer.rnevent.se, from the local network): **Stacks, Add
 stack**.
 
 - [ ] **Name:** `stagehand-qvack`.
-- [ ] **Build method:** Web editor, with this compose file:
-
-  ```yaml
-  services:
-    stagehand-qvack:
-      image: ghcr.io/rneventteknik/stagehand-qvack:main
-      restart: unless-stopped
-      environment:
-        ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
-        BACKSTAGE2_MCP_URL: ${BACKSTAGE2_MCP_URL}
-        BACKSTAGE2_MCP_KEY: ${BACKSTAGE2_MCP_KEY}
-        SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
-        SLACK_APP_TOKEN: ${SLACK_APP_TOKEN}
-        LOG_LEVEL: ${LOG_LEVEL:-INFO}
-      logging:
-        driver: json-file
-        options:
-          max-size: 10m
-          max-file: "3"
-  ```
-
+- [ ] **Build method:** Repository.
+  - **Repository URL:** `https://github.com/rneventteknik/agentic-framework`. The
+    repo is public, so no authentication is needed.
+  - **Repository reference:** `refs/heads/main`.
+  - **Compose path:** `deploy/compose.yml`.
+- [ ] **GitOps updates:** on, with **Polling** every `5m`.
+  - **Re-pull image:** on, so each update pulls the latest
+    `ghcr.io/rneventteknik/stagehand-qvack:main`.
+  - **Force redeployment:** on. Without it, Portainer only redeploys when the
+    repo's commit changes, and a new image on its own never would. With it,
+    Portainer runs the update on every poll, and Compose only recreates the
+    container when the pulled image differs from the running one
+    ([Portainer FAQ](https://docs.portainer.io/faqs/troubleshooting/stacks-deployments-and-updates/how-do-automatic-updates-for-stacks-applications-work)).
 - [ ] **Environment variables:** add the five values from step 1, with
-  `BACKSTAGE2_MCP_URL=https://<backstage2 host>/api/mcp`. Portainer substitutes
-  them into the `${...}` references above. Leave `LOG_LEVEL` out unless you need
-  DEBUG; DEBUG logs every Slack event and model request, including booking data.
+  `BACKSTAGE2_MCP_URL=https://<backstage2 host>/api/mcp`. `deploy/compose.yml`
+  lists these names under `environment:` without values, so Compose takes them
+  from the stack's environment. Leave `LOG_LEVEL` out unless you need DEBUG;
+  DEBUG logs every Slack event and model request, including booking data.
 - [ ] **Deploy the stack.**
+
+The first deploy pulls the image, which can take longer than the 60 seconds
+Nginx Proxy Manager waits for `portainer.rnevent.se`. If the browser shows
+`504 Gateway Time-out`, Portainer has stopped the deploy halfway; deploy again,
+and the cached image makes it quick. Raising `proxy_read_timeout` and
+`proxy_send_timeout` to `300s` under the proxy host's Advanced settings avoids
+it.
 
 Never use the production Slack tokens anywhere else, such as a laptop: a second
 Socket Mode connection to the same app gets half of its messages.
@@ -95,13 +95,17 @@ Socket Mode connection to the same app gets half of its messages.
 
 ## 5. Updating
 
-After a change is merged to `main` and its workflow run has passed: in Portainer,
-open the stack, choose **Update the stack**, and turn on **Re-pull image and
-redeploy**.
+Merging to `main` is the deploy. The workflow publishes a new `:main` image, and
+within one polling interval Portainer pulls it and recreates the container.
+Changes to `deploy/compose.yml` arrive the same way.
 
-- [ ] Do it once after a small change, to know it works.
-- [ ] To roll back, change the image tag in the editor to a previous
-  `sha-<commit>` tag and update the stack. Every published image has one.
+- [ ] Merge a small change once, and check the container is recreated with the
+  new image within about five minutes.
+- [ ] To roll back, revert the change on `main`. To hold a specific version
+  instead, set `image:` in `deploy/compose.yml` to a `sha-<commit>` tag; every
+  published image has one.
+- [ ] A redeploy restarts the container, which drops the in-memory conversation
+  history. Threads continue, but without what was said before the restart.
 
 ## Good to know
 
@@ -116,10 +120,7 @@ redeploy**.
 Each of these replaces a manual step above. The details are in
 [the plan](slack-agent.md#steps).
 
-- **A Git repository stack with GitOps updates.** Point the stack at this repo
-  instead of the web editor, and let Portainer poll `main`, so merging redeploys
-  without step 5. `deploy/compose.yml` would need its environment written as
-  `${...}` references like the compose file above.
-- **Pinned digests and Renovate.** Pin the image by digest instead of `:main`, and
-  let Renovate propose the bumps.
+- **Pinned digests and Renovate.** Pin the image by digest instead of `:main`,
+  and let Renovate propose the bumps. Each deploy is then a commit, and Force
+  redeployment can be turned off.
 - **LiteLLM** in front of Anthropic and backstage2, as part 2 of the plan.
