@@ -1,6 +1,8 @@
 import logging
 import os
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from pydantic_ai import Agent, UsageLimits
 from pydantic_ai.mcp import MCPToolset
@@ -9,6 +11,16 @@ from agent.deps import AgentDeps
 from agent.tools import add_emoji_reaction
 
 SYSTEM_PROMPT = Path(__file__).with_name("system_prompt.md").read_text(encoding="utf-8")
+STOCKHOLM = ZoneInfo("Europe/Stockholm")
+WEEKDAYS_SV = (
+    "måndag",
+    "tisdag",
+    "onsdag",
+    "torsdag",
+    "fredag",
+    "lördag",
+    "söndag",
+)
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +69,15 @@ agent = Agent(
     system_prompt=SYSTEM_PROMPT,
     tools=[add_emoji_reaction],
 )
+
+
+@agent.instructions
+def current_date_instructions() -> str:
+    now = datetime.now(STOCKHOLM)
+    weekday = WEEKDAYS_SV[now.weekday()]
+    return (
+        f"Dagens datum är {now:%Y-%m-%d} ({weekday}, Europe/Stockholm)."
+    )
 
 
 def run_agent(text, deps, message_history=None):

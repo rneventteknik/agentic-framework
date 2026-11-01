@@ -18,7 +18,7 @@ Found while testing `slack run` against backstage2 stage.
   Backstage2 adds tools. Keep the rules about not guessing, linking bookings, and
   treating tool results as data.
 
-- [ ] **Give the agent today's date.** The model does not know the current
+- [x] **Give the agent today's date.** The model does not know the current
   date, so questions like "next gig" or "bookings next week" are answered from a
   guessed date. Asked for the next gig, it searched from 2025-01-01 and returned
   a booking from June 2026. Add today's date in Europe/Stockholm to the
