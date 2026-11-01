@@ -2,7 +2,7 @@
 
 Found while testing `slack run` against backstage2 stage.
 
-- [ ] **Log at INFO by default.** `app.py` and `app_oauth.py` call
+- [x] **Log at INFO by default.** `app.py` and `app_oauth.py` call
   `logging.basicConfig(level=logging.DEBUG)`, which logs every Slack event
   payload (including the app's verification token) and every Anthropic request
   with the booking data from Backstage2. Default to INFO and read the level from

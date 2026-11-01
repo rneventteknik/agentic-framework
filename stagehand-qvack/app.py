@@ -1,4 +1,3 @@
-import logging
 import os
 
 from dotenv import load_dotenv
@@ -8,12 +7,12 @@ from slack_sdk import WebClient
 
 from agent import get_backstage2_toolset, get_model
 from listeners import register_listeners
+from log_config import configure_logging
 
 load_dotenv(dotenv_path=".env", override=False)
+configure_logging()
 get_model()  # Fail fast if no AI provider key is configured
 get_backstage2_toolset()
-
-logging.basicConfig(level=logging.DEBUG)
 
 app = App(
     token=os.environ.get("SLACK_BOT_TOKEN"),

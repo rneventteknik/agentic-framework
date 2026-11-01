@@ -14,12 +14,13 @@ from slack_sdk.oauth.state_store import FileOAuthStateStore
 
 from agent import get_backstage2_toolset, get_model
 from listeners import register_listeners
+from log_config import configure_logging
 
 load_dotenv(dotenv_path=".env", override=False)
+configure_logging()
 get_model()  # Fail fast if no AI provider key is configured
 get_backstage2_toolset()
 
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
