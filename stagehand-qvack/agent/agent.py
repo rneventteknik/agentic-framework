@@ -8,7 +8,6 @@ from pydantic_ai import Agent, UsageLimits
 from pydantic_ai.mcp import MCPToolset
 
 from agent.deps import AgentDeps
-from agent.tools import add_emoji_reaction
 
 SYSTEM_PROMPT = Path(__file__).with_name("system_prompt.md").read_text(encoding="utf-8")
 STOCKHOLM = ZoneInfo("Europe/Stockholm")
@@ -67,7 +66,6 @@ def get_backstage2_toolset() -> MCPToolset:
 agent = Agent(
     deps_type=AgentDeps,
     system_prompt=SYSTEM_PROMPT,
-    tools=[add_emoji_reaction],
 )
 
 

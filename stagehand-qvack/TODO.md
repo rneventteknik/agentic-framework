@@ -26,7 +26,7 @@ Found while testing `slack run` against backstage2 stage.
   function in `agent/agent.py`, so it is computed per message rather than once
   at startup.
 
-- [ ] **Remove the emoji reaction tool.** It costs part of a model turn on every
+- [x] **Remove the emoji reaction tool.** It costs part of a model turn on every
   message and adds nothing to the answer. Remove:
   - `agent/tools/` (`emoji_reaction.py` and `__init__.py`)
   - the import and `tools=[add_emoji_reaction]` in `agent/agent.py`
