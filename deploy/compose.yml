@@ -1,0 +1,14 @@
+name: stagehand
+
+services:
+  stagehand-qvack:
+    image: ghcr.io/rneventteknik/stagehand-qvack:main
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"

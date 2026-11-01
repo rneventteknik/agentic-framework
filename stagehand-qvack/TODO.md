@@ -49,3 +49,17 @@ Found while testing `slack run` against backstage2 stage.
   ([developing agents](https://docs.slack.dev/ai/developing-agents)). Check what
   Bolt for Python 1.30.0 offers for it before calling the Web API directly, and
   whether `manifest.json` needs `agent_view` and the `agent_session_stopped` event.
+
+- [ ] **Remove the Slack MCP Server code.** It needs a user token, which only the
+  OAuth install flow in `app_oauth.py` provides. `app.py` runs over Socket Mode
+  with a bot token, so it never runs, and `manifest.json` no longer asks for user
+  scopes. Remove:
+  - `SLACK_MCP_URL`, the `deps.user_token` branch in `run_agent` and the
+    `## SLACK MCP SERVER` section of the system prompt in `agent/agent.py`
+  - `user_token` from `AgentDeps` in `agent/deps.py`, and where
+    `listeners/events/app_mentioned.py` and `listeners/events/message.py` set it
+  - the Slack MCP status blocks in `listeners/views/app_home_builder.py` and the
+    `context.user_token` check in `listeners/events/app_home_opened.py`
+  - `app_oauth.py`, since the app is installed in one workspace with the Slack CLI
+  - in `manifest.json`: `is_mcp_enabled`, `redirect_urls`, and the ngrok
+    `request_url`s, which Socket Mode does not use
