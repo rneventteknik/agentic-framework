@@ -56,3 +56,9 @@ based on, is written up in **[research/](research/README.md)** — start there.
 | [Chat surface](research/chat-surface.md) | Build a chat UI, or adopt Open WebUI wholesale |
 | [Non-profit programs](research/nonprofit-programs.md) | What RN's non-profit status is worth across the stack |
 | [Open questions](research/open-questions.md) | Decisions still to make |
+
+## Plan
+
+What is being built, in order, is in **[plan/](plan/README.md)**. The first slice is
+a [Slack agent](plan/slack-agent.md) answering questions from backstage2, followed by
+a self-hosted LiteLLM gateway in front of it.
