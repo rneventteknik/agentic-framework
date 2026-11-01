@@ -282,7 +282,7 @@ Once the agent is running, there are several ways to interact:
 
 **App Home** — Open the agent in Slack and click the _Home_ tab. You'll see a welcome message with instructions on how to interact.
 
-**Direct Messages** — Open a DM with the agent. You'll see suggested prompts like _Write a Message_, _Summarize_, and _Brainstorm_ — pick one or type your own message. The agent replies in a thread. Send follow-up messages in the same thread and the agent will maintain the full conversation context.
+**Direct Messages** — Open a DM with the agent. You'll see suggested prompts — pick one or type your own message. The agent replies in a thread. Send follow-up messages in the same thread and the agent will maintain the full conversation context.
 
 **Channel @mentions** — Invite the agent to a channel by typing `/invite @agent-name` in the message box, then @mention it followed by your message. The agent responds in a thread so the channel stays clean.
 

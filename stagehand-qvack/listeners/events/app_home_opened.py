@@ -8,9 +8,9 @@ from slack_sdk import WebClient
 from listeners.views.app_home_builder import build_app_home_view
 
 SUGGESTED_PROMPTS = [
-    {"title": "Write a Message", "message": "Help me draft a message to my team"},
-    {"title": "Summarize", "message": "Can you help me summarize something?"},
-    {"title": "Brainstorm", "message": "I need help brainstorming ideas"},
+    {"title": "Djupdyk i en bokning", "message": "Var är majoriteten av kostnaden för Datas nollegasque?"},
+    {"title": "Jämför event", "message": "Jämför de två senaste TP eventen, vad skiljer dem åt i utrustningsväg?"},
+    {"title": "Se mina event", "message": "Vilka event är jag uppskriven på denna vecka?"},
 ]
 
 
