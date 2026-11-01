@@ -75,9 +75,7 @@ agent = Agent(
 def current_date_instructions() -> str:
     now = datetime.now(STOCKHOLM)
     weekday = WEEKDAYS_SV[now.weekday()]
-    return (
-        f"Dagens datum är {now:%Y-%m-%d} ({weekday}, Europe/Stockholm)."
-    )
+    return f"Dagens datum är {now:%Y-%m-%d} ({weekday}, Europe/Stockholm)."
 
 
 def run_agent(text, deps, message_history=None):
