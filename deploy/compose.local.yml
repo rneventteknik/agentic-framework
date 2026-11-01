@@ -1,0 +1,6 @@
+services:
+  stagehand-qvack:
+    build: ../stagehand-qvack
+    image: stagehand-qvack:local
+    env_file:
+      - path: ../stagehand-qvack/.env

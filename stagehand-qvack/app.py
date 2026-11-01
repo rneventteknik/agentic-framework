@@ -13,7 +13,7 @@ load_dotenv(dotenv_path=".env", override=False)
 get_model()  # Fail fast if no AI provider key is configured
 get_backstage2_toolset()
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO").upper())
 
 app = App(
     token=os.environ.get("SLACK_BOT_TOKEN"),
