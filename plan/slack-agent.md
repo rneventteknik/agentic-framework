@@ -222,9 +222,9 @@ why.
 
 ### Known issue: `'typing.Union' object is not callable`
 
-Seen in a local test setup. Every mention of the bot was answered with
-":warning: Something went wrong! ('typing.Union' object is not callable)", and the
-traceback ended in Pydantic AI's Anthropic model:
+Seen in a local test setup with pydantic-ai 2.55.0. Every mention of the bot was
+answered with ":warning: Something went wrong! ('typing.Union' object is not
+callable)", and the traceback ended in Pydantic AI's Anthropic model:
 
 ```
 File ".../pydantic_ai/models/anthropic.py", line 2450, in _map_message
@@ -233,13 +233,14 @@ TypeError: 'typing.Union' object is not callable
 ```
 
 - **Cause:** pydantic-ai 2.55.0 only sets a lower bound on the Anthropic SDK
-  (`anthropic>=1.12.1`), so pip installed anthropic 2.3.0. In anthropic 2.x,
+  (`anthropic>=1.12.1`), so a fresh install gets anthropic 2.x. There,
   `BetaMessageParam` is a `Union` type alias rather than a TypedDict, and
-  pydantic-ai 2.55.0 still calls it as a constructor.
-- **Fix used:** pin `anthropic==1.17.0`, the last 1.x release, next to
-  `pydantic-ai[openai,anthropic]==2.55.0` in `pyproject.toml`.
-- **Better fix:** pydantic-ai 2.64.0 no longer calls `BetaMessageParam(...)` and
-  works with anthropic 2.x. Upgrade to it, with a testing pass, and drop the pin.
+  pydantic-ai 2.55.0 calls it as a constructor.
+- **Requirement:** with anthropic 2.x, use pydantic-ai 2.64.0 or later, which does
+  not call `BetaMessageParam(...)`. `pyproject.toml` depends on
+  `pydantic-ai[openai,anthropic]==2.64.0`, tested against anthropic 2.3.0.
+- **Fallback:** if pydantic-ai has to stay below 2.64.0, pin `anthropic` below
+  2.0.
 
 If an agent request fails with a `TypeError` inside `pydantic_ai/models/`, check
 first whether the installed `anthropic` or `openai` version is newer than the
