@@ -13,3 +13,9 @@ answers questions using the Anthropic API and the backstage2 MCP server, and run
 on our Proxmox host. No inbound ports are opened; deploys are pulled by the host
 instead of pushed by CI. Once that runs, a self-hosted LiteLLM gateway moves the
 keys, budgets and MCP access in front of it.
+
+### [Deploy TODO](deploy-todo.md)
+The fastest way to get the agent running: a Portainer stack on the existing
+`docker-host` VM, pulling the image GitHub Actions publishes to GHCR. Checklist
+form, with the automation from the plan listed as later replacements for each
+manual step.
