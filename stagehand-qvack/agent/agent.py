@@ -36,7 +36,7 @@ def get_model() -> str:
         return _cached_model
 
     if os.environ.get("ANTHROPIC_API_KEY"):
-        _cached_model = "anthropic:claude-sonnet-5-5"
+        _cached_model = "anthropic:claude-haiku-5-5"
     elif os.environ.get("OPENAI_API_KEY"):
         _cached_model = "openai:gpt-4.1-mini"
     else:

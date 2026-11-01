@@ -141,7 +141,7 @@ This app supports both Anthropic and OpenAI as AI providers. Set at least one AP
 
 ### Anthropic Setup
 
-Uses Anthropic's `claude-sonnet-4-6` model through Pydantic AI.
+Uses Anthropic's `claude-haiku-5-5` model through Pydantic AI.
 
 1. Create an API key from your [Anthropic dashboard](https://console.anthropic.com/settings/keys).
 1. Rename `.env.sample` to `.env`.
