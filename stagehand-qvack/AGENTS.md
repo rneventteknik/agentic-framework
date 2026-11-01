@@ -12,7 +12,7 @@ To install the Slack plugin for your coding agent, follow [Claude Code, Codex, C
 
 ## Before you finish
 
-Run `ruff check .`, `ruff format --check .`, and `pytest`. CI runs the same on every PR.
+Run `uv run ruff check .`, `uv run ruff format --check .`, and `uv run pytest`. CI runs the same on every PR.
 
 ## Code Style
 

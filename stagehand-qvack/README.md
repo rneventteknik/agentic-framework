@@ -125,18 +125,15 @@ cd my-starter-agent
 
 </details>
 
-### Setup your python virtual environment
+### Install dependencies
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/), then from this directory:
 
 ```sh
-python3 -m venv .venv
-source .venv/bin/activate  # for Windows OS, .\.venv\Scripts\Activate instead should work
+uv sync
 ```
 
-#### Install dependencies
-
-```sh
-pip install -e ".[dev]"
-```
+This creates a `.venv`, installs the app in editable mode, and pulls in dev tools (`pytest`, `ruff`). Use `uv run` for commands in that environment (for example `uv run python app.py`).
 
 ## Providers
 
@@ -184,7 +181,7 @@ slack run
 #### Terminal
 
 ```sh
-python3 app.py
+uv run python app.py
 ```
 
 </details>
@@ -268,7 +265,7 @@ Replace `your-subdomain` in `SLACK_REDIRECT_URI` with your ngrok subdomain.
 5. Start the app:
 
 ```sh
-python3 app_oauth.py
+uv run python app_oauth.py
 ```
 
 6. Click the install URL printed in the terminal to install the app to your workspace via OAuth.
@@ -295,10 +292,10 @@ Once the agent is running, there are several ways to interact:
 
 ```sh
 # Run ruff check from root directory for linting
-ruff check
+uv run ruff check
 
 # Run ruff format from root directory for code formatting
-ruff format
+uv run ruff format
 ```
 
 ## Project Structure

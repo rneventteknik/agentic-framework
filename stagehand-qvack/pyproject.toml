@@ -1,23 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "stagehand-qvack"
 version = "0.1.0"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "slack-sdk==3.45.0",
     "slack-bolt==1.30.0",
     "slack-cli-hooks==0.3.0",
     "pydantic-ai[openai,anthropic]==2.64.0",
     "python-dotenv==1.2.4",
+    "tzdata",
 ]
 
 [project.optional-dependencies]
 test = [
     "pytest==9.1.1",
 ]
+
+[dependency-groups]
 dev = [
-    "bolt-python-support-agent-pydantic[test]",
+    "pytest==9.1.1",
     "ruff==0.17.2",
 ]
+
+[tool.uv]
+default-groups = ["dev"]
 
 [tool.setuptools.packages.find]
 include = ["agent*", "listeners*", "thread_context*"]
