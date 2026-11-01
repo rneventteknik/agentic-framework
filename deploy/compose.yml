@@ -1,12 +1,16 @@
-name: stagehand
+name: stagehand-qvack
 
 services:
   stagehand-qvack:
     image: ghcr.io/rneventteknik/stagehand-qvack:main
     restart: unless-stopped
-    env_file:
-      - path: .env
-        required: false
+    environment:
+      - ANTHROPIC_API_KEY
+      - BACKSTAGE2_MCP_URL
+      - BACKSTAGE2_MCP_KEY
+      - SLACK_BOT_TOKEN
+      - SLACK_APP_TOKEN
+      - LOG_LEVEL
     logging:
       driver: json-file
       options:
