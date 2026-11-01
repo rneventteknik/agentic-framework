@@ -103,6 +103,7 @@ def get_backstage2_toolset() -> MCPToolset:
         )
     return MCPToolset(url, headers={"Authorization": f"Bearer {key}"})
 
+
 agent = Agent(
     deps_type=AgentDeps,
     system_prompt=SYSTEM_PROMPT,
