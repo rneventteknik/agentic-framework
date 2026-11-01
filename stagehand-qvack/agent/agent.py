@@ -60,7 +60,11 @@ def get_backstage2_toolset() -> MCPToolset:
             "Backstage2 MCP not configured. "
             "Set BACKSTAGE2_MCP_URL and BACKSTAGE2_MCP_KEY in your environment."
         )
-    return MCPToolset(url, headers={"Authorization": f"Bearer {key}"})
+    return MCPToolset(
+        url,
+        headers={"Authorization": f"Bearer {key}"},
+        tool_error_behavior="failed",
+    )
 
 
 agent = Agent(
