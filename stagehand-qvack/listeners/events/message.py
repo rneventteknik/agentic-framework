@@ -49,13 +49,15 @@ def handle_message(
 
         # Set assistant thread status with loading messages
         set_status(
-            status="Thinking...",
+            status="Tänker...",
             loading_messages=[
-                "Teaching the hamsters to type faster…",
-                "Untangling the internet cables…",
-                "Consulting the office goldfish…",
-                "Polishing up the response just for you…",
-                "Convincing the AI to stop overthinking…",
+                "Rullar kablar med Över-Under tekniken…",
+                "Kånkar scen-podie, sköldpadde-style…",
+                "Hashmeckar lite bara…",
+                "Väntar på hissen…",
+                "Packar caset…",
+                "Byter glödlampa…",
+                "Finjusterar EQ:n…",
             ],
         )
 
@@ -80,6 +82,6 @@ def handle_message(
     except Exception as e:
         logger.exception("Failed to handle message")
         say(
-            text=f":warning: Something went wrong! ({e})",
+            text=f":warning: Något gick fel! ({e})",
             thread_ts=event.get("thread_ts") or event.get("ts"),
         )
