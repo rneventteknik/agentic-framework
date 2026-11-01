@@ -63,3 +63,18 @@ Found while testing `slack run` against backstage2 stage.
   - `app_oauth.py`, since the app is installed in one workspace with the Slack CLI
   - in `manifest.json`: `is_mcp_enabled`, `redirect_urls`, and the ngrok
     `request_url`s, which Socket Mode does not use
+
+- [ ] **@-mention the people responsible for a booking.** Backstage2 stores each
+  member's Slack user ID (`slackId` on the user model), but its MCP tools leave it
+  out: `toMcpUser` in `backstage2/src/lib/mcp/bookingMappers.ts` returns only
+  `id`, `name` and `nameTag`. Two changes:
+  - **backstage2:** add `slackId` to `toMcpUser`, so `ansvarigMedlem`, the
+    co-owners and time-report users carry it, and document the field in the tool
+    descriptions. Decide whether it needs the `pii` scope: a Slack ID only
+    identifies someone inside our own workspace, and Slack shows their current
+    name, so it is arguably no more personal than the first name already returned.
+  - **This agent:** tell the model in the system prompt to mention a person as
+    `<@SLACK_ID>` when a `slackId` is present, and to fall back to the name
+    otherwise. Check that mentions survive streaming with `chat.startStream`.
+    A mention notifies that person, so only mention when the user asks who is
+    responsible or asks to reach them, not in every answer that names someone.
